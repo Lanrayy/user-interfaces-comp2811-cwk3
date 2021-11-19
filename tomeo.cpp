@@ -16,6 +16,7 @@
 #include <vector>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
+#include <QScrollArea>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileIconProvider>
 #include <QDesktopServices>
@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
     player->setVideoOutput(videoWidget);
 
     // a row of buttons
-    QWidget *buttonWidget = new QWidget();
+    QWidget *buttonWidget = new QWidget();  //this is the container
     // a list of the buttons
     std::vector<TheButton*> buttons;
     // the buttons are arranged horizontally
@@ -117,8 +118,8 @@ int main(int argc, char *argv[]) {
 
 
     // create the four buttons
-    for ( int i = 0; i < 4; i++ ) {
-        TheButton *button = new TheButton(buttonWidget);
+    for ( int i = 0; i < 6; i++ ) { //6 seems to be the maximum?
+        TheButton *button = new TheButton(buttonWidget);    //this is an instance of the button class
         button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
         buttons.push_back(button);
         layout->addWidget(button);
@@ -135,9 +136,12 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
 
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidget(buttonWidget);
+
     // add the video and the buttons to the top level widget
     top->addWidget(videoWidget);
-    top->addWidget(buttonWidget);
+    top->addWidget(scrollArea);
 
     // showtime!
     window.show();
