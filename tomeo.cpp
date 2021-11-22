@@ -17,6 +17,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QScrollArea>
+#include <QSlider>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileIconProvider>
 #include <QDesktopServices>
@@ -105,9 +106,26 @@ int main(int argc, char *argv[]) {
     QVideoWidget *videoWidget = new QVideoWidget;
     videoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
+
+    // the layout that will allow for controls and a slider to be added in one main area
+    // (and the widget that holds it)
+    QWidget *playerWidget = new QWidget();
+    QVBoxLayout *mediaLayout = new QVBoxLayout;
+
     // the QMediaPlayer which controls the playback
     ThePlayer *player = new ThePlayer;
+
+    // the scrub that allows shifting through the video
+    QSlider *scrub = new QSlider;
+
+    // piece everything together
     player->setVideoOutput(videoWidget);
+    player->setScrub(scrub);
+    scrub->setOrientation(Qt::Horizontal);
+    mediaLayout->addWidget(videoWidget);
+    mediaLayout->addWidget(scrub);
+    playerWidget->setLayout(mediaLayout);
+
 
     // a column of buttons
     QWidget *buttonWidget = new QWidget();  //this is the container for the thumbnails
@@ -143,12 +161,18 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
 
+<<<<<<< tomeo.cpp
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidget(buttonWidget);
+
+=======
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
-    top->addWidget(videoWidget, 0, 0);   //video widget is row 0 col 0
+    top->addWidget(playerWidget, 0, 0);   //video widget is row 0 col 0
     top->setColumnStretch(0, 1);
     top->addWidget(scrollArea, 0, 1); //scollArea is row 0 col 1
     top->setColumnStretch(1, 1);
+>>>>>>> tomeo.cpp
 
     // showtime!
     window.show();
