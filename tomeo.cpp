@@ -17,6 +17,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QScrollArea>
+#include <QSlider>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileIconProvider>
 #include <QDesktopServices>
@@ -104,9 +105,25 @@ int main(int argc, char *argv[]) {
     // the widget that will show the video
     QVideoWidget *videoWidget = new QVideoWidget;
 
+
+    // the layout that will allow for controls and a slider to be added in one main area
+    // (and the widget that holds it)
+    QWidget *playerWidget = new QWidget();
+    QVBoxLayout *mediaLayout = new QVBoxLayout;
+
     // the QMediaPlayer which controls the playback
     ThePlayer *player = new ThePlayer;
+
+    // the scrub that allows shifting through the video
+    QSlider *scrub = new QSlider;
+
+    // piece everything together
     player->setVideoOutput(videoWidget);
+    scrub->setOrientation(Qt::Horizontal);
+    mediaLayout->addWidget(videoWidget);
+    mediaLayout->addWidget(scrub);
+    playerWidget->setLayout(mediaLayout);
+
 
     // a row of buttons
     QWidget *buttonWidget = new QWidget();  //this is the container
@@ -140,7 +157,7 @@ int main(int argc, char *argv[]) {
     scrollArea->setWidget(buttonWidget);
 
     // add the video and the buttons to the top level widget
-    top->addWidget(videoWidget);
+    top->addWidget(playerWidget);
     top->addWidget(scrollArea);
 
     // showtime!
