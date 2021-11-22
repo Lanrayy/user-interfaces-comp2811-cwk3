@@ -161,18 +161,15 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
 
-<<<<<<< tomeo.cpp
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidget(buttonWidget);
 
-=======
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
     top->addWidget(playerWidget, 0, 0);   //video widget is row 0 col 0
     top->setColumnStretch(0, 1);
     top->addWidget(scrollArea, 0, 1); //scollArea is row 0 col 1
     top->setColumnStretch(1, 1);
->>>>>>> tomeo.cpp
 
     // showtime!
     window.show();
