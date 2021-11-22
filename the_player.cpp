@@ -3,6 +3,7 @@
 //
 
 #include "the_player.h"
+#include <iostream>
 
 // all buttons have been setup, store pointers here
 void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i) {
@@ -15,6 +16,7 @@ void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo
 void ThePlayer::setScrub(QSlider* s) {
     scrub = s;
     connect(scrub, SIGNAL(valueChanged(int)), this, SLOT(setPos()));
+    connect( mTimer, SIGNAL (timeout()),  SLOT (setScrubPos()));
 }
 
 // change the image and video for one button every one second
@@ -31,6 +33,14 @@ void ThePlayer::setPos() {
     value = (scrub->value() * duration())/scrub->maximum();
     setPosition(value);
     play();
+}
+
+// update scrub position every interval
+void ThePlayer::setScrubPos() {
+    int value;
+    value = (100 * this->position())/this->duration();
+    std::cout << value << std::endl;
+    scrub->setValue(value);
 }
 
 void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
