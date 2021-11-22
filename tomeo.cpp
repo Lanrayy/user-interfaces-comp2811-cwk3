@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
 
     // piece everything together
     player->setVideoOutput(videoWidget);
+    player->setScrub(scrub);
     scrub->setOrientation(Qt::Horizontal);
     mediaLayout->addWidget(videoWidget);
     mediaLayout->addWidget(scrub);

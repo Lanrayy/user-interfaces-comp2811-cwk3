@@ -21,6 +21,7 @@ private:
     std::vector<TheButtonInfo>* infos;
     std::vector<TheButton*>* buttons;
     QTimer* mTimer;
+    QSlider* scrub;
     long updateCount = 0;
 
 public:
@@ -33,7 +34,7 @@ public:
         mTimer->start();
         connect( mTimer, SIGNAL (timeout()), SLOT ( shuffle() ) ); // ...running shuffle method
     }
-    void setControls(std::vector<QWidget*>* controls);
+    void setScrub(QSlider* scrub);
 
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);
@@ -42,6 +43,8 @@ private slots:
 
     // change the image and video for one button every one second
     void shuffle();
+
+    void setPos();
 
     void playStateChanged (QMediaPlayer::State ms);
 
