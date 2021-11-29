@@ -39,7 +39,7 @@ void ThePlayer::setPos() {
 void ThePlayer::setScrubPos() {
     int value;
     value = (100 * this->position())/this->duration();
-    std::cout << value << std::endl;
+//    std::cout << value << std::endl;
     scrub->setValue(value);
 }
 
@@ -52,6 +52,8 @@ void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
         break;
     }
 }
+
+
 
 void ThePlayer::jumpTo (TheButtonInfo* button) {
     setMedia( * button -> url);

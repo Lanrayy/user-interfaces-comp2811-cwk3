@@ -17,7 +17,9 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QScrollArea>
+#include <QWidget>
 #include <QSlider>
+#include <QMessageBox>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileIconProvider>
 #include <QDesktopServices>
@@ -151,7 +153,8 @@ int main(int argc, char *argv[]) {
     //create scrollArea for the thumbnail container
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidget(buttonWidget);
-    scrollArea->setMaximumWidth(480);   //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+    scrollArea->setMaximumWidth(465);   //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+    scrollArea->setMinimumWidth(465);
 
     // create the main window and layout
     QWidget window;
@@ -161,11 +164,29 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
 
+
+    //create browse button & set its size
+    QPushButton *browse = new QPushButton();
+    browse->setText("Browse");
+    browse->setFixedSize(200, 30);
+
+    // create message box
+    QMessageBox *message = new QMessageBox();
+    message->setWindowTitle("Browse");
+    message->setText("Congratulations, you have browsed and added new video(s) from your library");
+
+
+    // connect browse button to message box
+    QObject::connect(browse, SIGNAL(clicked()), message, SLOT(exec()));
+
+
+
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
     top->addWidget(playerWidget, 0, 0);   //video widget is row 0 col 0
     top->setColumnStretch(0, 1);
     top->addWidget(scrollArea, 0, 1); //scollArea is row 0 col 1
+    top->addWidget(browse, 1,1);
     top->setColumnStretch(1, 1);
 
     // showtime!
