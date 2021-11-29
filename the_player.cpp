@@ -12,12 +12,21 @@ void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo
     jumpTo(buttons -> at(0) -> info);
 }
 
+
 // ensure that 'scrub' attribute points to a slider element
 void ThePlayer::setScrub(QSlider* s) {
     scrub = s;
     connect(scrub, SIGNAL(valueChanged(int)), this, SLOT(setPos()));
     connect( mTimer, SIGNAL (timeout()),  SLOT (setScrubPos()));
 }
+
+void ThePlayer::setPlayPause(QPushButton* p) {
+    pausePlayButton = p;
+    connect(pausePlayButton, SIGNAL(clicked()), this, SLOT(ChangePlayOrPause()));
+}
+
+
+
 
 // change the image and video for one button every one second
 void ThePlayer::shuffle() {
@@ -37,11 +46,29 @@ void ThePlayer::setPos() {
 
 // update scrub position every interval
 void ThePlayer::setScrubPos() {
-    int value;
-    value = (100 * this->position())/this->duration();
-    std::cout << value << std::endl;
-    scrub->setValue(value);
+    //int value;
+    //value = (100 * this->position())/this->duration();
+    //std::cout << value << std::endl;
+    //scrub->setValue(value);
 }
+
+
+void ThePlayer::ChangePlayOrPause() {
+    if(playing == 1){
+        playing = 0;
+        pausePlayButton->setText(">");
+        pause();
+    }
+    else{
+        playing =1;
+        pausePlayButton->setText("||");
+        play();
+
+    }
+}
+
+
+
 
 void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
     switch (ms) {

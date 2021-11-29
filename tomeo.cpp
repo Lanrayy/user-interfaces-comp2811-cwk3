@@ -118,13 +118,26 @@ int main(int argc, char *argv[]) {
     // the scrub that allows shifting through the video
     QSlider *scrub = new QSlider;
 
+
+    // The pause/play button
+    QPushButton *pausePlayButton = new QPushButton("||");
+    pausePlayButton ->setFixedSize(30,30);
+
+    player->setScrub(scrub);
+
+
     // piece everything together
     player->setVideoOutput(videoWidget);
     player->setScrub(scrub);
+
+    player->setPlayPause(pausePlayButton);
     scrub->setOrientation(Qt::Horizontal);
     mediaLayout->addWidget(videoWidget);
     mediaLayout->addWidget(scrub);
+    mediaLayout->addWidget(pausePlayButton);
+
     playerWidget->setLayout(mediaLayout);
+
 
 
     // a column of buttons

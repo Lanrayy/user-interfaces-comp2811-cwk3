@@ -12,6 +12,7 @@
 #include <vector>
 #include <QTimer>
 #include <QSlider>
+#include <QPushButton>
 
 class ThePlayer : public QMediaPlayer {
 
@@ -22,7 +23,10 @@ private:
     std::vector<TheButton*>* buttons;
     QTimer* mTimer;
     QSlider* scrub;
+    QPushButton* pausePlayButton;
+
     long updateCount = 0;
+    int playing =1;
 
 public:
     ThePlayer() : QMediaPlayer(NULL) {
@@ -36,6 +40,9 @@ public:
     }
     void setScrub(QSlider* scrub);
 
+    void setPlayPause(QPushButton* pausePlayButton);
+    //void setPlay(QPushButton* playButton);
+
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);
 
@@ -47,6 +54,8 @@ private slots:
     void setPos();
 
     void setScrubPos();
+
+    void ChangePlayOrPause();
 
     void playStateChanged (QMediaPlayer::State ms);
 
