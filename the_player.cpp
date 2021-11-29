@@ -37,10 +37,10 @@ void ThePlayer::setPos() {
 
 // update scrub position every interval
 void ThePlayer::setScrubPos() {
-    int value;
-    value = (100 * this->position())/this->duration();
+//    int value;
+//    value = (100 * this->position())/this->duration();
 //    std::cout << value << std::endl;
-    scrub->setValue(value);
+//    scrub->setValue(value);
 }
 
 void ThePlayer::playStateChanged (QMediaPlayer::State ms) {

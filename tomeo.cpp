@@ -164,20 +164,41 @@ int main(int argc, char *argv[]) {
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
 
+    //creating the layout and its  widget
+    QWidget *browseButtonsWidget = new QWidget();
+    QHBoxLayout *browseButtonLayout = new QHBoxLayout();
+    browseButtonsWidget->setLayout(browseButtonLayout); // set layout
 
-    //create browse button & set its size
-    QPushButton *browse = new QPushButton();
-    browse->setText("Browse");
-    browse->setFixedSize(200, 30);
 
+    //create add video button & set its size
+    QPushButton *addVideo = new QPushButton();
+    addVideo->setText("Add video...");
+    addVideo->setFixedSize(200, 30);
     // create message box
-    QMessageBox *message = new QMessageBox();
-    message->setWindowTitle("Browse");
-    message->setText("Congratulations, you have browsed and added new video(s) from your library");
+    QMessageBox *addVideoMessage = new QMessageBox();
+    addVideoMessage->setWindowTitle("Browse...");
+    addVideoMessage->setText("Congratulations, you've added new a new video");
+    // connect add video button to message box
+    QObject::connect(addVideo, SIGNAL(clicked()), addVideoMessage, SLOT(exec()));
 
 
-    // connect browse button to message box
-    QObject::connect(browse, SIGNAL(clicked()), message, SLOT(exec()));
+    //create import folder button & set its size
+    QPushButton *importFolder = new QPushButton();
+    importFolder->setText("Import folder...");
+    importFolder->setFixedSize(200, 30);
+    // create message box
+    QMessageBox *importFolderMessage = new QMessageBox();
+    importFolderMessage->setWindowTitle("Import folder");
+    importFolderMessage->setText("Congratulations, you've imported a new folder");
+    QObject::connect(importFolder, SIGNAL(clicked()), importFolderMessage, SLOT(exec()));
+
+    //adding widgets to layout
+    browseButtonLayout->addWidget(addVideo);
+    browseButtonLayout->addWidget(importFolder);
+
+
+
+
 
 
 
@@ -186,7 +207,7 @@ int main(int argc, char *argv[]) {
     top->addWidget(playerWidget, 0, 0);   //video widget is row 0 col 0
     top->setColumnStretch(0, 1);
     top->addWidget(scrollArea, 0, 1); //scollArea is row 0 col 1
-    top->addWidget(browse, 1,1);
+    top->addWidget(browseButtonsWidget, 1,1);
     top->setColumnStretch(1, 1);
 
     // showtime!
