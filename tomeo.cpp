@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
     addVideo->setFixedSize(200, 30);
     // create message box
     QMessageBox *addVideoMessage = new QMessageBox();
-    addVideoMessage->setWindowTitle("Browse...");
+    addVideoMessage->setWindowTitle("Add Video...");
     addVideoMessage->setText("Congratulations, you've added new a new video");
     // connect add video button to message box
     QObject::connect(addVideo, SIGNAL(clicked()), addVideoMessage, SLOT(exec()));
@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
     importFolder->setFixedSize(200, 30);
     // create message box
     QMessageBox *importFolderMessage = new QMessageBox();
-    importFolderMessage->setWindowTitle("Import folder");
+    importFolderMessage->setWindowTitle("Import folder...");
     importFolderMessage->setText("Congratulations, you've imported a new folder");
     QObject::connect(importFolder, SIGNAL(clicked()), importFolderMessage, SLOT(exec()));
 
