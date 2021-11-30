@@ -21,7 +21,7 @@ void ThePlayer::setScrub(QSlider* s) {
 }
 
 
-
+//Playback controls
 void ThePlayer::setPlayPause(QPushButton* p) {
     pausePlayButton = p;
     connect(pausePlayButton, SIGNAL(clicked()), this, SLOT(ChangePlayOrPause()));
@@ -39,8 +39,6 @@ void ThePlayer::setVolume(QSlider* v) {
 void ThePlayer::adjustVolume() {
        setVolume(volume);
 }
-
-
 
 void ThePlayer::Replay() {
     //resets the video to the begining not the slider
