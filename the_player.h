@@ -12,7 +12,6 @@
 #include <vector>
 #include <QTimer>
 #include <QSlider>
-#include <QPushButton>
 
 class ThePlayer : public QMediaPlayer {
 
