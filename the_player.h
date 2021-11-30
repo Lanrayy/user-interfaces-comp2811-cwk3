@@ -23,10 +23,12 @@ private:
     std::vector<TheButton*>* buttons;
     QTimer* mTimer;
     QSlider* scrub;
-    QPushButton* pausePlayButton;
-
     long updateCount = 0;
+
     int playing =1;
+    QPushButton* pausePlayButton;
+    QPushButton* replayButton;
+    QSlider* volume;
 
 public:
     ThePlayer() : QMediaPlayer(NULL) {
@@ -41,7 +43,8 @@ public:
     void setScrub(QSlider* scrub);
 
     void setPlayPause(QPushButton* pausePlayButton);
-    //void setPlay(QPushButton* playButton);
+    void setReplay(QPushButton* pausePlayButton);
+    void setVolume(QSlider* volume);
 
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);
@@ -56,6 +59,10 @@ private slots:
     void setScrubPos();
 
     void ChangePlayOrPause();
+
+    void Replay();
+
+    void adjustVolume();
 
     void playStateChanged (QMediaPlayer::State ms);
 

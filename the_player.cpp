@@ -20,13 +20,52 @@ void ThePlayer::setScrub(QSlider* s) {
     connect( mTimer, SIGNAL (timeout()),  SLOT (setScrubPos()));
 }
 
+
+
 void ThePlayer::setPlayPause(QPushButton* p) {
     pausePlayButton = p;
     connect(pausePlayButton, SIGNAL(clicked()), this, SLOT(ChangePlayOrPause()));
 }
 
+void ThePlayer::setReplay(QPushButton* p) {
+    replayButton = p;
+    connect(replayButton, SIGNAL(clicked()), this, SLOT(Replay()));
+}
+void ThePlayer::setVolume(QSlider* v) {
+    volume = v;
+    connect(volume, SIGNAL(valueChanged(int)), this, SLOT(adjustVolume()));
+}
+
+void ThePlayer::adjustVolume() {
+       setVolume(volume);
+}
 
 
+
+void ThePlayer::Replay() {
+    //resets the video to the begining not the slider
+    pause();
+    setPosition(0);
+    play();
+    scrub->setValue(0);
+    pause();
+    pausePlayButton->setText(">");
+    playing = 0;
+}
+
+void ThePlayer::ChangePlayOrPause() {
+    if(playing == 1){
+        playing = 0;
+        pausePlayButton->setText(">");
+        pause();
+    }
+    else{
+        playing =1;
+        pausePlayButton->setText("||");
+        play();
+
+    }
+}
 
 // change the image and video for one button every one second
 void ThePlayer::shuffle() {
@@ -46,26 +85,15 @@ void ThePlayer::setPos() {
 
 // update scrub position every interval
 void ThePlayer::setScrubPos() {
-    //int value;
-    //value = (100 * this->position())/this->duration();
+    int value;
+    value = 100*(this->position())/this->duration();
     //std::cout << value << std::endl;
-    //scrub->setValue(value);
+
+    scrub->setValue(value);
 }
 
 
-void ThePlayer::ChangePlayOrPause() {
-    if(playing == 1){
-        playing = 0;
-        pausePlayButton->setText(">");
-        pause();
-    }
-    else{
-        playing =1;
-        pausePlayButton->setText("||");
-        play();
 
-    }
-}
 
 
 

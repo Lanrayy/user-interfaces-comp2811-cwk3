@@ -119,9 +119,29 @@ int main(int argc, char *argv[]) {
     QSlider *scrub = new QSlider;
 
 
-    // The pause/play button
+    // Creating a layout for all the contols to go in
+    QHBoxLayout *controlsLayout = new QHBoxLayout();
+    //creating a widget for the layout to go in so it can be added to the main layout
+    QWidget *buttonWidgetControls = new QWidget();
+    buttonWidgetControls->setLayout(controlsLayout);
+
+
+    //volume & pause/play & replay buttons
+    QSlider *volume = new QSlider;
+    volume->setOrientation(Qt::Horizontal);
+    volume->setRange(0,100);
+    volume->setFixedWidth(80);
     QPushButton *pausePlayButton = new QPushButton("||");
     pausePlayButton ->setFixedSize(30,30);
+    QPushButton *replayButton = new QPushButton("<I");
+    //QPixmap pixmap("/replayIcon.png");
+    //replayButton->setIcon(pixmap);
+    replayButton ->setFixedSize(30,30);
+
+    //add the button to the controlsLayout.
+    controlsLayout->addWidget(volume);
+    controlsLayout->addWidget(pausePlayButton);
+    controlsLayout->addWidget(replayButton);
 
     player->setScrub(scrub);
 
@@ -130,11 +150,17 @@ int main(int argc, char *argv[]) {
     player->setVideoOutput(videoWidget);
     player->setScrub(scrub);
 
+    player->setVolume(volume);
     player->setPlayPause(pausePlayButton);
+    player->setReplay(replayButton);
+
+
+
     scrub->setOrientation(Qt::Horizontal);
     mediaLayout->addWidget(videoWidget);
     mediaLayout->addWidget(scrub);
-    mediaLayout->addWidget(pausePlayButton);
+    mediaLayout->addWidget(buttonWidgetControls);
+
 
     playerWidget->setLayout(mediaLayout);
 
@@ -173,6 +199,14 @@ int main(int argc, char *argv[]) {
     window.setLayout(top);
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
+    //
+
+
+
+    //qhorizontallayout
+    //add widgets ontop layout
+    //
+    //
 
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
