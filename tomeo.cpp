@@ -130,13 +130,20 @@ int main(int argc, char *argv[]) {
     QSlider *volume = new QSlider;
     volume->setOrientation(Qt::Horizontal);
     volume->setRange(0,100);
-    volume->setFixedWidth(80);
-    QPushButton *pausePlayButton = new QPushButton("||");
-    pausePlayButton ->setFixedSize(30,30);
-    QPushButton *replayButton = new QPushButton("<I");
-    //QPixmap pixmap("/replayIcon.png");
-    //replayButton->setIcon(pixmap);
-    replayButton ->setFixedSize(30,30);
+    volume->setFixedWidth(100);
+    volume->setStyleSheet("color: red");
+    QPushButton *pausePlayButton = new QPushButton();
+    pausePlayButton ->setFixedSize(50,50);
+    pausePlayButton->setIcon(QIcon(":pause-icon.png"));
+    pausePlayButton->setIconSize(QSize(50,50));
+    pausePlayButton->setStyleSheet("border: none");
+
+
+    QPushButton *replayButton = new QPushButton();
+    replayButton ->setFixedSize(35,35);
+    replayButton->setIcon(QIcon(":replay-icon.png"));
+    replayButton->setIconSize(QSize(35,35));
+    replayButton->setStyleSheet("border: none");
 
     //add the button to the controlsLayout.
     controlsLayout->addWidget(volume);
@@ -144,7 +151,6 @@ int main(int argc, char *argv[]) {
     controlsLayout->addWidget(replayButton);
 
     player->setScrub(scrub);
-
 
     // piece everything together
     player->setVideoOutput(videoWidget);
@@ -163,9 +169,11 @@ int main(int argc, char *argv[]) {
 
     //video player
     playerWidget->setLayout(mediaLayout);
+    playerWidget->setStyleSheet("background-color: #333333");
 
     // a column of buttons
     QWidget *buttonWidget = new QWidget();  //this is the container for the thumbnails
+//    buttonWidget->setStyleSheet("background-color: #666666");
     // a list of the buttons
     std::vector<TheButton*> buttons;
     // the buttons are arranged vertically
@@ -175,6 +183,7 @@ int main(int argc, char *argv[]) {
     // create the thumbnails
     for (int i = 0; i < videos.size(); i++ ) { //for each video in the videos vector
         TheButton *button = new TheButton(buttonWidget);    //this is an instance of the button class
+//        button->setStyleSheet("background-color: #333333; border: 1px solid #333333");
         button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
         buttons.push_back(button);
         layout->addWidget(button, i / 2, i % 2, Qt::AlignHCenter);
@@ -188,7 +197,8 @@ int main(int argc, char *argv[]) {
     //create scrollArea for the thumbnail container
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidget(buttonWidget);
-    scrollArea->setMaximumWidth(480);   //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+    scrollArea->setMaximumWidth(465); //
+    scrollArea->setMinimumWidth(465); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
 
     // create the main window and layout
     QWidget window;
@@ -197,6 +207,7 @@ int main(int argc, char *argv[]) {
     window.setLayout(top);
     window.setWindowTitle("tomeo");
     window.setMinimumSize(800, 680);
+    window.setStyleSheet("background-color: #333333");
 
     //Browse button
     //creating the layout and its  widget
@@ -209,23 +220,38 @@ int main(int argc, char *argv[]) {
     QPushButton *addVideo = new QPushButton();
     addVideo->setText("Add video...");
     addVideo->setFixedSize(200, 30);
+    addVideo->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
     // create message box
     QMessageBox *addVideoMessage = new QMessageBox();
     addVideoMessage->setWindowTitle("Add Video...");
     addVideoMessage->setText("Congratulations, you've added new a new video");
+    addVideoMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok = addVideoMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
     // connect add video button to message box
     QObject::connect(addVideo, SIGNAL(clicked()), addVideoMessage, SLOT(exec()));
 
 
     //create import folder button & set its size
     QPushButton *importFolder = new QPushButton();
+    importFolder->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
     importFolder->setText("Import folder...");
     importFolder->setFixedSize(200, 30);
     // create message box
     QMessageBox *importFolderMessage = new QMessageBox();
     importFolderMessage->setWindowTitle("Import folder...");
     importFolderMessage->setText("Congratulations, you've imported a new folder");
+    importFolderMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok2 = importFolderMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok2->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
     QObject::connect(importFolder, SIGNAL(clicked()), importFolderMessage, SLOT(exec()));
+
+    //tomeo logo
+    QPushButton *tomeoLogo = new QPushButton();
+    tomeoLogo->setIcon(QIcon(":tomeo-logo-2.png"));
+    tomeoLogo->setFixedSize(240,50);
+    tomeoLogo->setIconSize(QSize(210,210));
+    tomeoLogo->setStyleSheet("border: none");
 
     //adding widgets to layout
     browseButtonLayout->addWidget(addVideo);
@@ -233,10 +259,11 @@ int main(int argc, char *argv[]) {
 
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
-    top->addWidget(playerWidget, 0, 0);   //video widget is row 0 col 0
+    top->addWidget(tomeoLogo, 0,0);
+    top->addWidget(playerWidget, 1, 0);   //video widget is row 1 col 0
     top->setColumnStretch(0, 1);
-    top->addWidget(scrollArea, 0, 1); //scollArea is row 0 col 1
-    top->addWidget(browseButtonsWidget, 1,1);
+    top->addWidget(scrollArea, 1, 1); //scollArea is row 0 col 1
+    top->addWidget(browseButtonsWidget, 0,1); // browse buttons are on row 0 col 1
     top->setColumnStretch(1, 1);
 
     // showtime!

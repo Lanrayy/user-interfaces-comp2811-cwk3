@@ -47,19 +47,19 @@ void ThePlayer::Replay() {
     play();
     scrub->setValue(0);
     pause();
-    pausePlayButton->setText(">");
+    pausePlayButton->setIcon(QIcon(":play-icon.png"));
     playing = 0;
 }
 
 void ThePlayer::ChangePlayOrPause() {
     if(playing == 1){
         playing = 0;
-        pausePlayButton->setText(">");
+        pausePlayButton->setIcon(QIcon(":play-icon.png"));
         pause();
     }
     else{
         playing =1;
-        pausePlayButton->setText("||");
+        pausePlayButton->setIcon(QIcon(":pause-icon.png"));
         play();
 
     }
