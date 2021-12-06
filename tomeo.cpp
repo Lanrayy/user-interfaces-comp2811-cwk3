@@ -150,7 +150,10 @@ int main(int argc, char *argv[]) {
     controlsLayout->addWidget(pausePlayButton);
     controlsLayout->addWidget(replayButton);
 
+<<<<<<< HEAD
     player->setScrub(scrub);
+=======
+>>>>>>> 66a6921f28b3a7041c1cd9d7c68ba754d150f823
 
     // piece everything together
     player->setVideoOutput(videoWidget);
