@@ -59,22 +59,14 @@ void ThePlayer::Replay() {
 void ThePlayer::ChangePlayOrPause() {
     if(playing == 1){
         playing = 0;
-<<<<<<< HEAD
         pausePlayButton->setIcon(QIcon(":play-icon.png"));
-=======
-        pausePlayButton->setText(">");
         mTimer->stop(); // stops scrub from updating while paused
->>>>>>> 66a6921f28b3a7041c1cd9d7c68ba754d150f823
         pause();
     }
     else{
         playing =1;
-<<<<<<< HEAD
-        pausePlayButton->setIcon(QIcon(":pause-icon.png"));
-=======
         mTimer->start();
-        pausePlayButton->setText("||");
->>>>>>> 66a6921f28b3a7041c1cd9d7c68ba754d150f823
+        pausePlayButton->setIcon(QIcon(":pause-icon.png"));
         play();
     }
 }
