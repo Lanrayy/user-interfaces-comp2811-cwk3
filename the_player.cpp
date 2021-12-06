@@ -89,7 +89,7 @@ void ThePlayer::setPos() {
 // update scrub position every interval
 void ThePlayer::setScrubPos() {
     int value;
-    std::cout << "MAXIMUM: " << scrub->maximum() << std::endl;
+//    std::cout << "MAXIMUM: " << scrub->maximum() << std::endl;
     value = this->position();
     scrub->setValue(value);
 }

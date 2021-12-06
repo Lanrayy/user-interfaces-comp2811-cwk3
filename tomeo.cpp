@@ -17,6 +17,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QScrollArea>
+#include <QFileDialog>
 #include <QSlider>
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QFileIconProvider>
@@ -117,6 +118,7 @@ int main(int argc, char *argv[]) {
 
     // the scrub that allows shifting through the video
     QSlider *scrub = new QSlider;
+    scrub->setStyleSheet("selection-background-color: #3B8DF1");
 
 
     // Creating a layout for all the contols to go in
@@ -131,7 +133,6 @@ int main(int argc, char *argv[]) {
     volume->setOrientation(Qt::Horizontal);
     volume->setRange(0,100);
     volume->setFixedWidth(100);
-    volume->setStyleSheet("color: red");
     QPushButton *pausePlayButton = new QPushButton();
     pausePlayButton ->setFixedSize(50,50);
     pausePlayButton->setIcon(QIcon(":pause-icon.png"));
@@ -182,12 +183,12 @@ int main(int argc, char *argv[]) {
 
     // create the thumbnails
     for (int i = 0; i < videos.size(); i++ ) { //for each video in the videos vector
-        TheButton *button = new TheButton(buttonWidget);    //this is an instance of the button class
-//        button->setStyleSheet("background-color: #333333; border: 1px solid #333333");
+        TheButton *button = new TheButton(buttonWidget); //this is an instance of the button class
         button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
         buttons.push_back(button);
         layout->addWidget(button, i / 2, i % 2, Qt::AlignHCenter);
         button->init(&videos.at(i));
+
     }
     layout->setAlignment(Qt::AlignHCenter);
 
@@ -199,6 +200,7 @@ int main(int argc, char *argv[]) {
     scrollArea->setWidget(buttonWidget);
     scrollArea->setMaximumWidth(465); //
     scrollArea->setMinimumWidth(465); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+
 
     // create the main window and layout
     QWidget window;
@@ -215,36 +217,74 @@ int main(int argc, char *argv[]) {
     QHBoxLayout *browseButtonLayout = new QHBoxLayout();
     browseButtonsWidget->setLayout(browseButtonLayout); // set layout
 
+    //File browser Dialog Boxes
+    QFileDialog *addVideoDialogBox = new QFileDialog();
+    addVideoDialogBox->setFileMode(QFileDialog::ExistingFiles);
+    addVideoDialogBox->setStyleSheet("background-color: #333333");
+    addVideoDialogBox->setNameFilter(("Videos (*.mov *.mp4 *.wmv)")); //only video files are displayed
+
+    //IMPORT FOLDER DIALOG BOX
+    QFileDialog *importFolderDialogBox = new QFileDialog();
+    importFolderDialogBox->setFileMode(QFileDialog::DirectoryOnly);
+    importFolderDialogBox->setNameFilter(("Videos (*.mov *.mp4 *.wmv)"));
 
     //create add video button & set its size
-    QPushButton *addVideo = new QPushButton();
-    addVideo->setText("Add video...");
-    addVideo->setFixedSize(200, 30);
-    addVideo->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
-    // create message box
-    QMessageBox *addVideoMessage = new QMessageBox();
-    addVideoMessage->setWindowTitle("Add Video...");
-    addVideoMessage->setText("Congratulations, you've added new a new video");
-    addVideoMessage->setStyleSheet("background-color: #333333; color: white");
-    QAbstractButton* ok = addVideoMessage->addButton(("Okay!"), QMessageBox::YesRole);
-    ok->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
-    // connect add video button to message box
-    QObject::connect(addVideo, SIGNAL(clicked()), addVideoMessage, SLOT(exec()));
+    QPushButton *addVideoButton = new QPushButton();
+    addVideoButton->setText("Add video...");
+    addVideoButton->setFixedSize(200, 30);
+    addVideoButton->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
+    // create success message box
+    QMessageBox *addVideoSuccessMessage = new QMessageBox();
+    addVideoSuccessMessage->setIcon(QMessageBox::Information);
+    addVideoSuccessMessage->setWindowTitle("Add Video...");
+    addVideoSuccessMessage->setText("Congratulations, you've added new a new video");
+    addVideoSuccessMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok1 = addVideoSuccessMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok1->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
+    //failure message box
+    QMessageBox *addVideoFailureMessage = new QMessageBox();
+    addVideoFailureMessage->setIcon(QMessageBox::Warning);
+    addVideoFailureMessage->setWindowTitle("Warning!");
+    addVideoFailureMessage->setText("Unable to add video. PLease try again.");
+    addVideoFailureMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok2 = addVideoFailureMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok2->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
 
+    // slots and signals for add video
+    QObject::connect(addVideoButton, SIGNAL(clicked()), addVideoDialogBox, SLOT(exec()));
+    QObject::connect(addVideoDialogBox, SIGNAL(accepted()), addVideoSuccessMessage, SLOT(exec()));
+    QObject::connect(addVideoDialogBox, SIGNAL(rejected()), addVideoFailureMessage, SLOT(exec())); // adding folder unsuccessful
 
     //create import folder button & set its size
-    QPushButton *importFolder = new QPushButton();
-    importFolder->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
-    importFolder->setText("Import folder...");
-    importFolder->setFixedSize(200, 30);
-    // create message box
-    QMessageBox *importFolderMessage = new QMessageBox();
-    importFolderMessage->setWindowTitle("Import folder...");
-    importFolderMessage->setText("Congratulations, you've imported a new folder");
-    importFolderMessage->setStyleSheet("background-color: #333333; color: white");
-    QAbstractButton* ok2 = importFolderMessage->addButton(("Okay!"), QMessageBox::YesRole);
-    ok2->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
-    QObject::connect(importFolder, SIGNAL(clicked()), importFolderMessage, SLOT(exec()));
+    QPushButton *importFolderButton = new QPushButton();
+    importFolderButton->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
+    importFolderButton->setText("Import folder...");
+    importFolderButton->setFixedSize(200, 30);
+
+    // IMPORT FOLDER
+    QMessageBox *importFolderSuccessMessage = new QMessageBox();
+    importFolderSuccessMessage->setIcon(QMessageBox::Information);
+    importFolderSuccessMessage->setWindowTitle("Import folder...");
+    importFolderSuccessMessage->setText("Congratulations, you've imported a new folder");
+    importFolderSuccessMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok3 = importFolderSuccessMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok3->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
+
+    QMessageBox *importFolderFailureMessage = new QMessageBox();
+    importFolderFailureMessage->setIcon(QMessageBox::Warning);
+    importFolderFailureMessage->setWindowTitle("Warning!");
+    importFolderFailureMessage->setText("Unable to import folder. PLease try again.");
+    importFolderFailureMessage->setStyleSheet("background-color: #333333; color: white");
+    QAbstractButton* ok4 = importFolderFailureMessage->addButton(("Okay!"), QMessageBox::YesRole);
+    ok4->setStyleSheet("background-color: #3B8DF1; border-radius: 10px; width: 100px; height: 25px; color: black");
+
+
+
+    //slots and signals for import folder
+    QObject::connect(importFolderButton, SIGNAL(clicked()), importFolderDialogBox, SLOT(exec()));
+    QObject::connect(importFolderDialogBox, SIGNAL(accepted()), importFolderSuccessMessage, SLOT(exec())); // adding folder successful
+    QObject::connect(importFolderDialogBox, SIGNAL(rejected()), importFolderFailureMessage, SLOT(exec())); // adding folder unsuccessful
+
 
     //tomeo logo
     QPushButton *tomeoLogo = new QPushButton();
@@ -254,8 +294,8 @@ int main(int argc, char *argv[]) {
     tomeoLogo->setStyleSheet("border: none");
 
     //adding widgets to layout
-    browseButtonLayout->addWidget(addVideo);
-    browseButtonLayout->addWidget(importFolder);
+    browseButtonLayout->addWidget(addVideoButton);
+    browseButtonLayout->addWidget(importFolderButton);
 
     // add the video and the buttons to the top level QGridLayout
     //the way items in the GridLayout works is you designate their Row then Column, then how many Rows they span over, then how many Cols they span over
