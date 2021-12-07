@@ -29,6 +29,7 @@
 #include <QtCore/QDirIterator>
 #include "the_player.h"
 #include "the_button.h"
+#include "custom_button.h"
 using namespace std;
 
 //define global variables
@@ -142,14 +143,14 @@ int main(int argc, char *argv[]) {
     volume->setRange(0,100);
     volume->setFixedWidth(100);
     volume->setTickPosition(QSlider::TicksBelow);
-    QPushButton *pausePlayButton = new QPushButton();
+    custom_button *pausePlayButton = new custom_button();
     pausePlayButton ->setFixedSize(50,50);
     pausePlayButton->setIcon(QIcon(":pause-icon.png"));
     pausePlayButton->setIconSize(QSize(50,50));
     pausePlayButton->setStyleSheet("border: none");
 
 
-    QPushButton *replayButton = new QPushButton();
+    custom_button *replayButton = new custom_button();
     replayButton ->setFixedSize(35,35);
     replayButton->setIcon(QIcon(":replay-icon.png"));
     replayButton->setIconSize(QSize(35,35));
@@ -264,7 +265,7 @@ int main(int argc, char *argv[]) {
     importFolderDialogBox->setNameFilter(("Videos (*.mov *.mp4 *.wmv)"));
 
     //create add video button & set its size
-    QPushButton *addVideoButton = new QPushButton();
+    custom_button *addVideoButton = new custom_button();
     addVideoButton->setText("Add video...");
     addVideoButton->setFixedSize(200, 30);
     addVideoButton->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
@@ -291,7 +292,7 @@ int main(int argc, char *argv[]) {
     QObject::connect(addVideoDialogBox, SIGNAL(rejected()), addVideoFailureMessage, SLOT(exec())); // adding folder unsuccessful
 
     //create import folder button & set its size
-    QPushButton *importFolderButton = new QPushButton();
+    custom_button *importFolderButton = new custom_button();
     importFolderButton->setStyleSheet("background-color: #3B8DF1; border-radius: 15px");
     importFolderButton->setText("Import folder...");
     importFolderButton->setFixedSize(200, 30);

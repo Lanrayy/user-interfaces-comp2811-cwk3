@@ -32,6 +32,9 @@ public:
 
 private slots:
     void clicked();
+    void enterEvent(QEvent * event) {
+        QWidget::setCursor(Qt::PointingHandCursor);
+    }
 
 signals:
     void jumpTo(TheButtonInfo*);
