@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pause-icon.png</file>
+        <file>play-icon.png</file>
+        <file>replay-icon.png</file>
+        <file>tomeo-logo.png</file>
+        <file>tomeo-logo-2.png</file>
+    </qresource>
+</RCC>

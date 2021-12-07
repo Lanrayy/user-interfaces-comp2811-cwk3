@@ -33,12 +33,13 @@ private:
 public:
     ThePlayer() : QMediaPlayer(NULL) {
         setVolume(0); // be slightly less annoying
-        connect (this, SIGNAL (stateChanged(QMediaPlayer::State)), this, SLOT (playStateChanged(QMediaPlayer::State)) );
+        connect (this, SIGNAL (stateChanged(QMediaPlayer::State)), this, SLOT (playStateChanged(QMediaPlayer::State)));
+        connect (this, SIGNAL (durationChanged(qint64)), this, SLOT (configureScrub()));
 
         mTimer = new QTimer(NULL);
         mTimer->setInterval(1000); // 1000ms is one second between ...
         mTimer->start();
-        connect( mTimer, SIGNAL (timeout()), SLOT ( shuffle() ) ); // ...running shuffle method
+        //connect( mTimer, SIGNAL (timeout()), SLOT ( shuffle() ) ); // ...running shuffle method
     }
     void setScrub(QSlider* scrub);
 
@@ -57,6 +58,8 @@ private slots:
     void setPos();
 
     void setScrubPos();
+
+    void configureScrub();
 
     void ChangePlayOrPause();
 

@@ -10,14 +10,19 @@ void ThePlayer::setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo
     buttons = b;
     infos = i;
     jumpTo(buttons -> at(0) -> info);
+    std::cout << "duration of media: " << this->duration() << std::endl;
+    scrub->setMaximum(this->duration());
+    scrub->setValue(this->position());
 }
 
 
 // ensure that 'scrub' attribute points to a slider element
 void ThePlayer::setScrub(QSlider* s) {
     scrub = s;
-    connect(scrub, SIGNAL(valueChanged(int)), this, SLOT(setPos()));
+    connect(scrub, SIGNAL(sliderReleased()), this, SLOT(setPos()));
+    connect(scrub, SIGNAL(sliderPressed()), this, SLOT(pause()));
     connect( mTimer, SIGNAL (timeout()),  SLOT (setScrubPos()));
+    configureScrub();
 }
 
 
@@ -47,21 +52,22 @@ void ThePlayer::Replay() {
     play();
     scrub->setValue(0);
     pause();
-    pausePlayButton->setText(">");
+    pausePlayButton->setIcon(QIcon(":play-icon.png"));
     playing = 0;
 }
 
 void ThePlayer::ChangePlayOrPause() {
     if(playing == 1){
         playing = 0;
-        pausePlayButton->setText(">");
+        pausePlayButton->setIcon(QIcon(":play-icon.png"));
+        mTimer->stop(); // stops scrub from updating while paused
         pause();
     }
     else{
         playing =1;
-        pausePlayButton->setText("||");
+        mTimer->start();
+        pausePlayButton->setIcon(QIcon(":pause-icon.png"));
         play();
-
     }
 }
 
@@ -75,26 +81,24 @@ void ThePlayer::shuffle() {
 // set position of the media based on the position of the slider
 void ThePlayer::setPos() {
     int value;
-    pause();
-    value = (scrub->value() * duration())/scrub->maximum();
+    value = scrub->value();
     setPosition(value);
     play();
 }
 
 // update scrub position every interval
 void ThePlayer::setScrubPos() {
-    //int value;
-    //value = 100*(this->position())/this->duration();
-    //std::cout << value << std::endl;
-
-    //scrub->setValue(value);
+    int value;
+//    std::cout << "MAXIMUM: " << scrub->maximum() << std::endl;
+    value = this->position();
+    scrub->setValue(value);
 }
 
-
-
-
-
-
+// configure scrub when duration of video is determined
+void ThePlayer::configureScrub() {
+    scrub->setMaximum(this->duration());
+    scrub->setValue(this->position());
+}
 
 void ThePlayer::playStateChanged (QMediaPlayer::State ms) {
     switch (ms) {
