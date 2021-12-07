@@ -13,6 +13,9 @@
 #include <QTimer>
 #include <QSlider>
 #include <QPushButton>
+#include <QVideoWidget>
+#include <QEvent>
+#include <QKeyEvent>
 
 class ThePlayer : public QMediaPlayer {
 
@@ -28,7 +31,8 @@ private:
     int playing =1;
     QPushButton* pausePlayButton;
     QPushButton* replayButton;
-    QSlider* volume;
+    QSlider* volumeSlider;
+    QVideoWidget* video;
 
 public:
     ThePlayer() : QMediaPlayer(NULL) {
@@ -43,17 +47,21 @@ public:
     }
     void setScrub(QSlider* scrub);
 
+    void setVideo(QVideoWidget* video);
+
+    void setVolumeSlider(QSlider* volumeSlider);
+
     void setPlayPause(QPushButton* pausePlayButton);
     void setReplay(QPushButton* pausePlayButton);
-    void setVolume(QSlider* volume);
+
+    //key board listener
+    bool eventFilter(QObject *obj, QEvent *e);
+
 
     // all buttons have been setup, store pointers here
     void setContent(std::vector<TheButton*>* b, std::vector<TheButtonInfo>* i);
 
 private slots:
-
-    // change the image and video for one button every one second
-    void shuffle();
 
     void setPos();
 
@@ -64,8 +72,6 @@ private slots:
     void ChangePlayOrPause();
 
     void Replay();
-
-    void adjustVolume();
 
     void playStateChanged (QMediaPlayer::State ms);
 

@@ -14,6 +14,7 @@
 #include <QMediaPlaylist>
 #include <string>
 #include <vector>
+#include <QtWidgets>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QScrollArea>
@@ -28,6 +29,10 @@
 #include <QtCore/QDirIterator>
 #include "the_player.h"
 #include "the_button.h"
+using namespace std;
+
+//define global variables
+std::vector<QString> vidTitles;
 
 // read in videos and thumbnails to this directory
 std::vector<TheButtonInfo> getInfoIn (std::string loc) {
@@ -49,6 +54,8 @@ std::vector<TheButtonInfo> getInfoIn (std::string loc) {
 #endif
 
             QString thumb = f.left( f .length() - 4) +".png";
+            string tempTitle = f.left( f .length() - 4).toStdString();
+            vidTitles.push_back(QString::fromStdString(tempTitle.substr(tempTitle.find_last_of('/') + 1)));
             if (QFile(thumb).exists()) { // if a png thumbnail exists
                 QImageReader *imageReader = new QImageReader(thumb);
                     QImage sprite = imageReader->read(); // read the thumbnail
@@ -130,9 +137,11 @@ int main(int argc, char *argv[]) {
 
     //volume & pause/play & replay buttons
     QSlider *volume = new QSlider;
+    player->setVolumeSlider(volume);
     volume->setOrientation(Qt::Horizontal);
     volume->setRange(0,100);
     volume->setFixedWidth(100);
+    volume->setTickPosition(QSlider::TicksBelow);
     QPushButton *pausePlayButton = new QPushButton();
     pausePlayButton ->setFixedSize(50,50);
     pausePlayButton->setIcon(QIcon(":pause-icon.png"));
@@ -155,10 +164,15 @@ int main(int argc, char *argv[]) {
 
     // piece everything together
     player->setVideoOutput(videoWidget);
+    player->setVideo(videoWidget);
     player->setScrub(scrub);
 
-    //volume and playback controls
-    player->setVolume(volume);
+    //volume slider connects to player's volume and vice versa
+    player->connect(volume, SIGNAL(valueChanged(int)), player, SLOT(setVolume(int)));
+    player->setVolume(50);   //initial volume 50
+    volume->setValue(50);
+
+    //playback for player set
     player->setPlayPause(pausePlayButton);
     player->setReplay(replayButton);
 
@@ -181,14 +195,35 @@ int main(int argc, char *argv[]) {
     QGridLayout *layout = new QGridLayout();
     buttonWidget->setLayout(layout);
 
+    QLabel *libraryHeader = new QLabel("Your Library");
+    libraryHeader->setStyleSheet("QLabel { color: white; font-weight: bold ; font-size: 20px}");
+    layout->addWidget(libraryHeader, 0, 0, Qt::AlignHCenter);
+    layout->setRowStretch(0, 1);
+
     // create the thumbnails
     for (int i = 0; i < videos.size(); i++ ) { //for each video in the videos vector
         TheButton *button = new TheButton(buttonWidget); //this is an instance of the button class
         button->connect(button, SIGNAL(jumpTo(TheButtonInfo* )), player, SLOT (jumpTo(TheButtonInfo*))); // when clicked, tell the player to play.
         buttons.push_back(button);
-        layout->addWidget(button, i / 2, i % 2, Qt::AlignHCenter);
+
+        //create the vid title to accompany the thumbnail
+        QLabel *title = new QLabel(vidTitles.at(i));
+        title->setStyleSheet("QLabel { color: white; font-weight: bold }");
+
+        //add the video to the button
         button->init(&videos.at(i));
 
+        //create a container and layout for both the button and it's title
+        QWidget *thumbnailContainer = new QWidget();
+        QVBoxLayout *thumbnailLayout = new QVBoxLayout();
+        thumbnailLayout->addWidget(button);
+        thumbnailLayout->addWidget(title);
+
+        //marry the layout to the container
+        thumbnailContainer->setLayout(thumbnailLayout);
+
+        //add button and label to the layout
+        layout->addWidget(thumbnailContainer, (i / 2) + 1, i % 2, Qt::AlignHCenter);
     }
     layout->setAlignment(Qt::AlignHCenter);
 
@@ -198,8 +233,8 @@ int main(int argc, char *argv[]) {
     //create scrollArea for the thumbnail container
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidget(buttonWidget);
-    scrollArea->setMaximumWidth(465); //
-    scrollArea->setMinimumWidth(465); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+    scrollArea->setMaximumWidth(530); //530?
+    scrollArea->setMinimumWidth(530); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
 
 
     // create the main window and layout
@@ -308,6 +343,8 @@ int main(int argc, char *argv[]) {
 
     // showtime!
     window.show();
+
+    app.installEventFilter(player);
 
     // wait for the app to terminate
     return app.exec();
