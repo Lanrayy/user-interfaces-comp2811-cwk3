@@ -114,6 +114,7 @@ int main(int argc, char *argv[]) {
     // the widget that will show the video
     QVideoWidget *videoWidget = new QVideoWidget;
     videoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    videoWidget->setStyleSheet("background-color: black");
 
 
     // the layout that will allow for controls and a slider to be added in one main area
@@ -134,6 +135,8 @@ int main(int argc, char *argv[]) {
     //creating a widget for the layout to go in so it can be added to the main layout
     QWidget *buttonWidgetControls = new QWidget();
     buttonWidgetControls->setLayout(controlsLayout);
+    controlsLayout->setSpacing(0);
+    controlsLayout->setAlignment(Qt::AlignCenter);
 
 
     //volume & pause/play & replay buttons
@@ -141,23 +144,46 @@ int main(int argc, char *argv[]) {
     player->setVolumeSlider(volume);
     volume->setOrientation(Qt::Horizontal);
     volume->setRange(0,100);
-    volume->setFixedWidth(100);
-    volume->setTickPosition(QSlider::TicksBelow);
+    volume->setFixedWidth(80);
+//    volume->setTickPosition(QSlider::TicksBelow);
+
+    //create the volume Icon
+    custom_button *volumeIcon = new custom_button();
+    volumeIcon->setFixedSize(25,25);
+    volumeIcon->setIcon(QIcon(":volume-icon.png"));
+    volumeIcon->setIconSize(QSize(25,25));
+    volumeIcon->setStyleSheet("border: none");
+
+    //create the layout for volume
+    QHBoxLayout *volumeLayout = new QHBoxLayout();
+    volumeLayout->addWidget(volumeIcon);
+    volumeLayout->addWidget(volume);
+    volumeLayout->addStretch();
+    volumeLayout->setSpacing(0);
+    volumeLayout->setAlignment(Qt::AlignLeft);
+
+    //volume container
+    custom_button *volumeContainer = new custom_button();
+    volumeContainer->setLayout(volumeLayout);
+    volumeContainer->setFixedWidth(120);
+    volumeContainer->setFixedHeight(50);
+    volumeContainer->setStyleSheet("border: none");
+
     custom_button *pausePlayButton = new custom_button();
-    pausePlayButton ->setFixedSize(50,50);
+    pausePlayButton ->setFixedSize(120,50);
     pausePlayButton->setIcon(QIcon(":pause-icon.png"));
     pausePlayButton->setIconSize(QSize(50,50));
     pausePlayButton->setStyleSheet("border: none");
 
 
     custom_button *replayButton = new custom_button();
-    replayButton ->setFixedSize(35,35);
+    replayButton ->setFixedSize(120,50);
     replayButton->setIcon(QIcon(":replay-icon.png"));
-    replayButton->setIconSize(QSize(35,35));
+    replayButton->setIconSize(QSize(25,25));
     replayButton->setStyleSheet("border: none");
 
     //add the button to the controlsLayout.
-    controlsLayout->addWidget(volume);
+    controlsLayout->addWidget(volumeContainer);
     controlsLayout->addWidget(pausePlayButton);
     controlsLayout->addWidget(replayButton);
 
@@ -185,7 +211,7 @@ int main(int argc, char *argv[]) {
 
     //video player
     playerWidget->setLayout(mediaLayout);
-    playerWidget->setStyleSheet("background-color: #333333");
+    playerWidget->setStyleSheet("background-color: #25282a");
 
     // a column of buttons
     QWidget *buttonWidget = new QWidget();  //this is the container for the thumbnails
@@ -197,8 +223,8 @@ int main(int argc, char *argv[]) {
     buttonWidget->setLayout(layout);
 
     QLabel *libraryHeader = new QLabel("Your Library");
-    libraryHeader->setStyleSheet("QLabel { color: white; font-weight: bold ; font-size: 20px}");
-    layout->addWidget(libraryHeader, 0, 0, Qt::AlignHCenter);
+    libraryHeader->setStyleSheet("QLabel { color: #ACACAC; font-weight: bold ; font-size: 20px}");
+    layout->addWidget(libraryHeader, 0, 0, Qt::AlignLeft);
     layout->setRowStretch(0, 1);
 
     // create the thumbnails
@@ -209,7 +235,7 @@ int main(int argc, char *argv[]) {
 
         //create the vid title to accompany the thumbnail
         QLabel *title = new QLabel(vidTitles.at(i));
-        title->setStyleSheet("QLabel { color: white; font-weight: bold }");
+        title->setStyleSheet("QLabel { color: #E3E3E3;}");
 
         //add the video to the button
         button->init(&videos.at(i));
@@ -234,8 +260,8 @@ int main(int argc, char *argv[]) {
     //create scrollArea for the thumbnail container
     QScrollArea *scrollArea = new QScrollArea();
     scrollArea->setWidget(buttonWidget);
-    scrollArea->setMaximumWidth(530); //530?
-    scrollArea->setMinimumWidth(530); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
+    scrollArea->setMaximumWidth(500); //530?
+    scrollArea->setMinimumWidth(500); //makes the maximum size for the thumbnail column fit 2 thumbnails with appropriate spacing
 
 
     // create the main window and layout
@@ -244,8 +270,9 @@ int main(int argc, char *argv[]) {
     top->setSizeConstraint(QLayout::SetDefaultConstraint);
     window.setLayout(top);
     window.setWindowTitle("tomeo");
-    window.setMinimumSize(800, 680);
-    window.setStyleSheet("background-color: #333333");
+    window.setMinimumSize(930, 680);
+//    window.setStyleSheet("background-color: #333333");
+    window.setStyleSheet("background-color: #25282a");
 
     //Browse button
     //creating the layout and its  widget
