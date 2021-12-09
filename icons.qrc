@@ -5,5 +5,6 @@
         <file>replay-icon.png</file>
         <file>tomeo-logo.png</file>
         <file>tomeo-logo-2.png</file>
+        <file>volume-icon.png</file>
     </qresource>
 </RCC>
