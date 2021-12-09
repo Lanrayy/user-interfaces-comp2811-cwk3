@@ -59,6 +59,7 @@ void ThePlayer::ChangePlayOrPause() {
     if(playing == 1){
         playing = 0;
         pausePlayButton->setIcon(QIcon(":play-icon.png"));
+        pausePlayButton->setToolTip("Play");
         mTimer->stop(); // stops scrub from updating while paused
         pause();
     }
@@ -66,6 +67,7 @@ void ThePlayer::ChangePlayOrPause() {
         playing =1;
         mTimer->start();
         pausePlayButton->setIcon(QIcon(":pause-icon.png"));
+        pausePlayButton->setToolTip("Pause");
         play();
     }
 }
@@ -113,10 +115,10 @@ bool ThePlayer::eventFilter(QObject *obj, QEvent *e)
             break;
         case Qt::Key_Space: {   //need to check if the video is at the end already
             if(this->state() != QMediaPlayer::State::StoppedState)
-                pausePlayButton->click();
+                ChangePlayOrPause();
             else {
                 replayButton->click();
-                pausePlayButton->click();
+                ChangePlayOrPause();
             }
             break;
         }

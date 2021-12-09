@@ -148,13 +148,14 @@ int main(int argc, char *argv[]) {
     pausePlayButton->setIcon(QIcon(":pause-icon.png"));
     pausePlayButton->setIconSize(QSize(50,50));
     pausePlayButton->setStyleSheet("border: none");
-
+    pausePlayButton->setToolTip("Pause");
 
     custom_button *replayButton = new custom_button();
     replayButton ->setFixedSize(35,35);
     replayButton->setIcon(QIcon(":replay-icon.png"));
     replayButton->setIconSize(QSize(35,35));
     replayButton->setStyleSheet("border: none");
+    replayButton->setToolTip("Replay");
 
     //add the button to the controlsLayout.
     controlsLayout->addWidget(volume);
